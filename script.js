@@ -2,6 +2,9 @@ const API_URL = 'https://randomuser.me/api/?results=25';
 let users = [];
 let container = document.querySelector('.container');
 let sortSpan = document.querySelector('.sort');
+let filter = document.querySelector('.filter');
+let div = document.createElement('div');
+
 
 fetch(API_URL)
     .then(function (response) {
@@ -14,10 +17,8 @@ fetch(API_URL)
     .catch(alert);
 
 function createCards(data) {
-    let div = document.createElement('div');
     div.className = "grid";
     data.forEach((item) => {
-        console.log(item);
         div.innerHTML += `<div class="user-card">
                 <img src="${item.picture.large}" class="thumbnail">
                 <div class="profile">
@@ -32,26 +33,37 @@ function createCards(data) {
 
     container.appendChild(div);
 }
-function sortCards(data) {
-    let div = document.querySelector('.grid');
+
+function sortByAge(data) {
+    console.log("click");
+    let grid = document.querySelector('.grid');
     let sortedByAge = data.sort((a, b) => {
         return a.dob.age - b.dob.age;
     });
-    sortSpan.addEventListener('click', () => {
-        div.innerHTML = "";
-        createCards(sortedByAge);
-
-    });
+    grid.innerHTML = "";
+    createCards(sortedByAge);
 
 }
 
+function sortByName(data) {
+    console.log("click");
 
+    let grid = document.querySelector('.grid');
+    let sortedByName = data.sort((a, b) => {
+        if (a.name.first < b.name.first) return -1;
+        if (a.name.first > b.name.first) return 1;
+        return 0;
+    });
+    grid.innerHTML = "";
+    createCards(sortedByName);
+
+}
 
 function render(data) {
     createCards(data);
-    sortCards(data);
-    console.log(users[0].name.title);
+    sortSpan.addEventListener('click', () => sortByAge(data));
+    filter.addEventListener('click', () => sortByName(data));
+
+
 
 }
-
-

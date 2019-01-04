@@ -94,3 +94,8 @@ body {
     text-transform: uppercase;
 }
 
+.sort,
+.filter:hover{
+    cursor: pointer;
+}
+
