@@ -4,8 +4,10 @@ let container = document.querySelector('.container');
 let sortSpan = document.querySelector('.sort');
 let filter = document.querySelector('.filter');
 let div = document.createElement('div');
+let search = document.querySelector('.search');
 let isSorted = false;
-let copy;
+
+
 
 fetch(API_URL)
     .then(function (response) {
@@ -13,7 +15,6 @@ fetch(API_URL)
     })
     .then(function (json) {
         users = json.results;
-        console.log(copy);
         render(users);
     })
     .catch(alert);
@@ -36,7 +37,8 @@ function createCards(data) {
 }
 
 function sortByAge(data) {
-    console.log(isSorted,"click");
+
+
     let grid = document.querySelector('.grid');
     let sortedByAge = data.sort((a, b) => {
         return a.dob.age - b.dob.age;
@@ -44,8 +46,7 @@ function sortByAge(data) {
     let sortedByAgeDown = data.sort((a, b) => {
         return b.dob.age - a.dob.age;
     }).slice();
-    console.log(sortedByAge,sortedByAgeDown);
-    console.log(sortedByAge===sortedByAgeDown);
+
     if (isSorted) {
         console.log(isSorted);
         grid.innerHTML = "";
@@ -67,9 +68,29 @@ function sortByName(data) {
         if (a.name.first < b.name.first) return -1;
         if (a.name.first > b.name.first) return 1;
         return 0;
-    });
+    }).slice();
     grid.innerHTML = "";
     createCards(sortedByName);
+
+}
+function searchByName(input,data){
+    let grid = document.querySelector('.grid');
+    let searchArray = [];
+     data.forEach(item=>{
+        if(item.name.first===input){
+            console.log(item);
+            searchArray.push(item);
+        }
+    });
+    grid.innerHTML = "";
+    if (searchArray.length !== 0) {
+        createCards(searchArray);
+    } else {
+        
+        grid.innerHTML = " No friend with this name, Sorry...";
+    }
+    
+    
 
 }
 
@@ -78,6 +99,7 @@ function render(data) {
 
     sortSpan.addEventListener('click', () => sortByAge(data));
     filter.addEventListener('click', () => sortByName(data));
+    search.addEventListener('input',(event)=>searchByName(event.target.value,data));
 
 
 
