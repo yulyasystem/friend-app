@@ -4,7 +4,8 @@ let container = document.querySelector('.container');
 let sortSpan = document.querySelector('.sort');
 let filter = document.querySelector('.filter');
 let div = document.createElement('div');
-
+let isSorted = false;
+let copy;
 
 fetch(API_URL)
     .then(function (response) {
@@ -12,6 +13,7 @@ fetch(API_URL)
     })
     .then(function (json) {
         users = json.results;
+        console.log(copy);
         render(users);
     })
     .catch(alert);
@@ -30,24 +32,36 @@ function createCards(data) {
 
             </div>`;
     });
-
     container.appendChild(div);
 }
 
 function sortByAge(data) {
-    console.log("click");
+    console.log(isSorted,"click");
     let grid = document.querySelector('.grid');
     let sortedByAge = data.sort((a, b) => {
         return a.dob.age - b.dob.age;
-    });
-    grid.innerHTML = "";
-    createCards(sortedByAge);
+    }).slice();
+    let sortedByAgeDown = data.sort((a, b) => {
+        return b.dob.age - a.dob.age;
+    }).slice();
+    console.log(sortedByAge,sortedByAgeDown);
+    console.log(sortedByAge===sortedByAgeDown);
+    if (isSorted) {
+        console.log(isSorted);
+        grid.innerHTML = "";
+        createCards(sortedByAgeDown);
+        isSorted = false;
+    } else{
+        console.log(isSorted,"else");
+        grid.innerHTML = "";
+        createCards(sortedByAge);
+        isSorted = true;
+    }
+
 
 }
 
 function sortByName(data) {
-    console.log("click");
-
     let grid = document.querySelector('.grid');
     let sortedByName = data.sort((a, b) => {
         if (a.name.first < b.name.first) return -1;
@@ -61,6 +75,7 @@ function sortByName(data) {
 
 function render(data) {
     createCards(data);
+
     sortSpan.addEventListener('click', () => sortByAge(data));
     filter.addEventListener('click', () => sortByName(data));
 
