@@ -1,4 +1,5 @@
 const API_URL = 'https://randomuser.me/api/?results=25';
+const DELAY = 5000;
 let users = [];
 let container = document.querySelector('.container');
 let sortSpan = document.querySelector('.sort');
@@ -52,8 +53,8 @@ function sortByAge(data) {
         grid.innerHTML = "";
         createCards(sortedByAgeDown);
         isSorted = false;
-    } else{
-        console.log(isSorted,"else");
+    } else {
+        console.log(isSorted, "else");
         grid.innerHTML = "";
         createCards(sortedByAge);
         isSorted = true;
@@ -73,11 +74,12 @@ function sortByName(data) {
     createCards(sortedByName);
 
 }
-function searchByName(input,data){
+
+function searchByName(input, data) {
     let grid = document.querySelector('.grid');
     let searchArray = [];
-     data.forEach(item=>{
-        if(item.name.first===input){
+    data.forEach(item => {
+        if (item.name.first === input) {
             console.log(item);
             searchArray.push(item);
         }
@@ -86,11 +88,15 @@ function searchByName(input,data){
     if (searchArray.length !== 0) {
         createCards(searchArray);
     } else {
-        
+        setTimeout(()=>{
+            grid.innerHTML = "";
+            createCards(data);
+            
+        },DELAY)
         grid.innerHTML = " No friend with this name, Sorry...";
     }
-    
-    
+
+
 
 }
 
@@ -99,7 +105,7 @@ function render(data) {
 
     sortSpan.addEventListener('click', () => sortByAge(data));
     filter.addEventListener('click', () => sortByName(data));
-    search.addEventListener('input',(event)=>searchByName(event.target.value,data));
+    search.addEventListener('input', (event) => searchByName(event.target.value, data));
 
 
 
