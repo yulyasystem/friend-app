@@ -87,15 +87,14 @@ body {
 .wrap{
     margin-left:90px;
 }
-.sort,.filter  {
+.sort,.filter, .arrow-down,.arrow-up  {
     border: 1px solid black;
     padding: 10px;
     margin-right:10px;
     text-transform: uppercase;
 }
 
-.sort,
-.filter:hover{
+.wrap:hover{
     cursor: pointer;
 }
 
