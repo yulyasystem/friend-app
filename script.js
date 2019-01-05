@@ -1,5 +1,4 @@
 const API_URL = 'https://randomuser.me/api/?results=25';
-const DELAY = 5000;
 let users = [];
 let container = document.querySelector('.container');
 let sortSpan = document.querySelector('.sort');
@@ -8,15 +7,23 @@ let grid = document.querySelector('.grid');
 let search = document.querySelector('.search');
 let isSorted = false;
 
+function handleErrors(response) {
+    if (!response.ok) {
+        throw Error(response.statusText);
+    }
+    return response;
+}
 fetch(API_URL)
-    .then(function (response) {
+    .then(handleErrors)
+    .then(response => {
         return response.json();
     })
     .then(function (json) {
+        console.log("ok!");
         users = json.results;
         render(users);
     })
-    .catch(alert);
+    .catch(error => console.log(error));
 
 function createCards(users) {
     users.forEach((item) => {
@@ -61,8 +68,8 @@ function sortByName(users) {
 }
 
 function searchByName(input, users) {
-    let searchArray=[];
-     users.map((item,index) => {
+    let searchArray = [];
+    users.map((item, index) => {
         if (item.name.first.includes(input) ||
             item.name.last.includes(input)) {
             searchArray.push(item);
@@ -78,7 +85,6 @@ function searchByName(input, users) {
 
 function render(users) {
     createCards(users);
-
     sortSpan.addEventListener('click', () => sortByAge(users));
     filter.addEventListener('click', () => sortByName(users));
     search.addEventListener('input', (event) => searchByName(event.target.value, users));
